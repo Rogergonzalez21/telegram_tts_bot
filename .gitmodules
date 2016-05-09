@@ -1,0 +1,3 @@
+[submodule "python_telegram_bot"]
+	path = python_telegram_bot
+	url = https://github.com/Rogergonzalez21/python-telegram-bot
