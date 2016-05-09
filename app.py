@@ -4,7 +4,7 @@ import logging
 from gtts import gTTS 
 from tempfile import TemporaryFile 
 import secrets
-import io
+import os
 from datetime import datetime
 
 bot = telegram.Bot(token=secrets.bot_token)
@@ -19,7 +19,11 @@ def generate_tts(text, lang):
     tts = gTTS(text=text, lang=lang)  
 
     filename = datetime.now()
+    if not os.path.exists('audios'):
+        os.makedirs('audios')
+    
     tts.save('audios/%s.ogg'%filename)
+
     return filename
 
 def start(bot, update):
