@@ -5,6 +5,7 @@ from gtts import gTTS
 from tempfile import TemporaryFile 
 import secrets
 import os
+import botan
 from datetime import datetime
 
 bot = telegram.Bot(token=secrets.bot_token)
@@ -34,6 +35,12 @@ def help(bot, update):
     bot.sendMessage(update.message.chat_id, text="To use: /tts [lang] [menssage], for example: /tts en I'm TTSBot!", parse_mode=telegram.ParseMode.HTML)
 
 def tts(bot, update):
+    botan_token = 'xlNvNez4gmhcxHLrZpLc4fNUPzjCx2U9'
+    uid = update.message.from_user.id
+    message_dict = update.message.to_dict()
+    event_name = update.message.text[4:]
+    print (botan.track(botan_token, uid, message_dict, event_name))
+
     try:
         filename = generate_tts(update.message.text[8:], update.message.text[5:7])
     except:
@@ -47,6 +54,11 @@ def tts(bot, update):
             echo(bot,update)
 
 def otts(bot,update):
+    botan_token = 'xlNvNez4gmhcxHLrZpLc4fNUPzjCx2U9'
+    uid = update.message.from_user.id
+    message_dict = update.message.to_dict()
+    event_name = update.message.text[5:]
+    print (botan.track(botan_token, uid, message_dict, event_name))
     try:
         filename = generate_tts('Fucking' + update.message.text[9:], update.message.text[6:8])
         bot.sendVoice(chat_id=update.message.chat_id, voice=open('audios/%s.ogg'%filename, 'rb'))
