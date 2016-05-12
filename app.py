@@ -36,9 +36,15 @@ def help(bot, update):
 def tts(bot, update):
     try:
         filename = generate_tts(update.message.text[8:], update.message.text[5:7])
-        bot.sendVoice(chat_id=update.message.chat_id, voice=open('audios/%s.ogg'%filename, 'rb'))
     except:
-        echo(bot,update)
+        filename = False
+        bot.sendMessage(update.message.chat_id, text="There has been an issue with Google, please try again later.")
+    
+    if filename != False:
+        try:
+            bot.sendVoice(chat_id=update.message.chat_id, voice=open('audios/%s.ogg'%filename, 'rb'))
+        except:
+            echo(bot,update)
 
 def otts(bot,update):
     try:
