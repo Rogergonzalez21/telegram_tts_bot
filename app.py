@@ -27,19 +27,25 @@ def generate_tts(text, lang):
 
     return filename
 
+def botan_track(update):
+    uid = update.message.from_user.id
+    message_dict = update.message.to_dict()
+    event_name = update.message.text.split(' ', 1)[0]
+    print (botan.track(secrets.botan_token, uid, message_dict, event_name))
+
 def start(bot, update):
+    botan_track(update)
+
     bot.sendVoice(chat_id=update.message.chat_id, voice=open('hello.ogg', 'rb'))
     bot.sendMessage(update.message.chat_id, text="Hi! I'm TTSpeechBot. To use: /tts [lang] [menssage], for example: /tts en I'm TTSBot!", parse_mode=telegram.ParseMode.HTML)
 
 def help(bot, update):
+    botan_track(update)
+
     bot.sendMessage(update.message.chat_id, text="To use: /tts [lang] [menssage], for example: /tts en I'm TTSBot!", parse_mode=telegram.ParseMode.HTML)
 
 def tts(bot, update):
-    botan_token = 'xlNvNez4gmhcxHLrZpLc4fNUPzjCx2U9'
-    uid = update.message.from_user.id
-    message_dict = update.message.to_dict()
-    event_name = update.message.text[4:]
-    print (botan.track(botan_token, uid, message_dict, event_name))
+    botan_track(update)
 
     try:
         filename = generate_tts(update.message.text[8:], update.message.text[5:7])
@@ -54,11 +60,8 @@ def tts(bot, update):
             echo(bot,update)
 
 def otts(bot,update):
-    botan_token = 'xlNvNez4gmhcxHLrZpLc4fNUPzjCx2U9'
-    uid = update.message.from_user.id
-    message_dict = update.message.to_dict()
-    event_name = update.message.text[5:]
-    print (botan.track(botan_token, uid, message_dict, event_name))
+    botan_track(update)
+
     try:
         filename = generate_tts('Fucking' + update.message.text[9:], update.message.text[6:8])
         bot.sendVoice(chat_id=update.message.chat_id, voice=open('audios/%s.ogg'%filename, 'rb'))
@@ -69,6 +72,8 @@ def echo(bot, update):
     bot.sendMessage(update.message.chat_id, text="Please, use the right format: /tts [lang] [menssage], for example: /tts en I'm TTSBot!")
 
 def developer(bot, update):
+    botan_track(update)
+    
     bot.sendMessage(update.message.chat_id, text='Made by @Rogergonzalez21 with a lot of help from @sergsss. GitHub repo: https://github.com/Rogergonzalez21/telegram_tts_bot')
 
 def error(bot, update, error):
