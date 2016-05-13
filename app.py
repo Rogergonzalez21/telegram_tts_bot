@@ -31,7 +31,8 @@ def botan_track(update):
     uid = update.message.from_user.id
     message_dict = update.message.to_dict()
     event_name = update.message.text.split(' ', 1)[0]
-    print (botan.track(secrets.botan_token, uid, message_dict, event_name))
+    if uid not in secrets.exclude_analytics:
+        botan.track(secrets.botan_token, uid, message_dict, event_name)
 
 def start(bot, update):
     botan_track(update)
