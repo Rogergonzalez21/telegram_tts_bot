@@ -1,11 +1,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from python_telegram_bot import telegram
-import logging
+import telegram, logging, secrets, os, botan
 from gtts import gTTS 
-from tempfile import TemporaryFile 
-import secrets
-import os
-import botan
+from tempfile import TemporaryFile
 from datetime import datetime
 
 bot = telegram.Bot(token=secrets.bot_token)
@@ -32,7 +28,7 @@ def botan_track(update):
     message_dict = update.message.to_dict()
     event_name = update.message.text.split(' ', 1)[0]
     if uid not in secrets.exclude_analytics:
-        botan.track(secrets.botan_token, uid, message_dict, event_name)
+        print(botan.track(secrets.botan_token, uid, message_dict, event_name))
 
 def start(bot, update):
     botan_track(update)
