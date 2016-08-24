@@ -1,6 +1,6 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import telegram, logging, secrets, os, botan
-from gtts import gTTS 
+from gtts import gTTS
 from tempfile import TemporaryFile
 from datetime import datetime
 
@@ -13,12 +13,12 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def generate_tts(text, lang):
-    tts = gTTS(text=text, lang=lang)  
+    tts = gTTS(text=text, lang=lang)
 
     filename = datetime.now()
     if not os.path.exists('audios'):
         os.makedirs('audios')
-    
+
     tts.save('audios/%s.ogg'%filename)
 
     return filename
@@ -44,17 +44,20 @@ def help(bot, update):
 def tts(bot, update):
     botan_track(update)
 
-    try:
-        filename = generate_tts(update.message.text[8:], update.message.text[5:7])
-    except:
-        filename = False
-        bot.sendMessage(update.message.chat_id, text="There has been an issue with Google, please try again later.")
-    
-    if filename != False:
+    if len(update.message.text) <= 7:
+        echo(bot,update)
+    else:
         try:
-            bot.sendVoice(chat_id=update.message.chat_id, voice=open('audios/%s.ogg'%filename, 'rb'))
+            filename = generate_tts(update.message.text[8:], update.message.text[5:7])
         except:
-            echo(bot,update)
+            filename = False
+            bot.sendMessage(update.message.chat_id, text="There has been an issue with Google, please try again later.")
+
+        if filename != False:
+            try:
+                bot.sendVoice(chat_id=update.message.chat_id, voice=open('audios/%s.ogg'%filename, 'rb'))
+            except:
+                echo(bot,update)
 
 def otts(bot,update):
     botan_track(update)
@@ -70,7 +73,7 @@ def echo(bot, update):
 
 def developer(bot, update):
     botan_track(update)
-    
+
     bot.sendMessage(update.message.chat_id, text='Made by @Rogergonzalez21 with a lot of help from @sergsss. GitHub repo: https://github.com/Rogergonzalez21/telegram_tts_bot')
 
 def error(bot, update, error):
