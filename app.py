@@ -100,7 +100,6 @@ def main():
     # log all errors
     dp.addErrorHandler(error)
 
-    # Start the Bot
     updater.start_polling()
 
     # Run the bot until the you presses Ctrl-C or the process receives SIGINT,
