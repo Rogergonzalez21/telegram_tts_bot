@@ -1,7 +1,9 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import telegram, logging, secrets, os, botan
+import telegram
+import logging
+import secrets
+import os
 from gtts import gTTS
-from tempfile import TemporaryFile
 from datetime import datetime
 
 bot = telegram.Bot(token=secrets.bot_token)
@@ -11,6 +13,7 @@ logging.basicConfig(
         level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+
 
 def generate_tts(text, lang):
     tts = gTTS(text=text, lang=lang)
@@ -23,27 +26,17 @@ def generate_tts(text, lang):
 
     return filename
 
-def botan_track(update):
-    uid = update.message.from_user.id
-    message_dict = update.message.to_dict()
-    event_name = update.message.text.split(' ', 1)[0]
-    if uid not in secrets.exclude_analytics:
-        print(botan.track(secrets.botan_token, uid, message_dict, event_name))
 
 def start(bot, update):
-    botan_track(update)
-
     bot.sendVoice(chat_id=update.message.chat_id, voice=open('hello.ogg', 'rb'))
     bot.sendMessage(update.message.chat_id, text="Hi! I'm TTSpeechBot. To use: /tts [lang] [menssage], for example: /tts en I'm TTSBot!", parse_mode=telegram.ParseMode.HTML)
 
-def help(bot, update):
-    botan_track(update)
 
+def help(bot, update):
     bot.sendMessage(update.message.chat_id, text="To use: /tts [lang] [menssage], for example: /tts en I'm TTSBot!", parse_mode=telegram.ParseMode.HTML)
 
-def tts(bot, update):
-    botan_track(update)
 
+def tts(bot, update):
     if len(update.message.text) <= 7:
         echo(bot,update)
     else:
@@ -59,46 +52,46 @@ def tts(bot, update):
             except:
                 echo(bot,update)
 
-def otts(bot,update):
-    botan_track(update)
 
+def otts(bot,update):
     try:
         filename = generate_tts('Fucking' + update.message.text[9:], update.message.text[6:8])
         bot.sendVoice(chat_id=update.message.chat_id, voice=open('audios/%s.ogg'%filename, 'rb'))
     except:
         bot.sendMessage(update.message.chat_id, text="Please, use the right format: /otts [lang] [menssage], for example: /tts en I'm TTSBot!")
 
+
 def echo(bot, update):
     bot.sendMessage(update.message.chat_id, text="Please, use the right format: /tts [lang] [menssage], for example: /tts en I'm TTSBot!")
 
-def developer(bot, update):
-    botan_track(update)
 
+def developer(bot, update):
     bot.sendMessage(update.message.chat_id, text='Made by @Rogergonzalez21 with a lot of help from @sergsss. GitHub repo: https://github.com/Rogergonzalez21/telegram_tts_bot')
+
 
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
+
 def main():
     # Create the EventHandler and pass it your bot's token.
-    updater = Updater(secrets.bot_token)
-
+    updater = Updater(token=secrets.bot_token)
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
     # on different commands - answer in Telegram
-    dp.addHandler(CommandHandler("start", start))
-    dp.addHandler(CommandHandler("help", help))
-    dp.addHandler(CommandHandler("tts", tts))
-    dp.addHandler(CommandHandler("otts", otts))
-    dp.addHandler(CommandHandler("developer", developer))
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(CommandHandler("tts", tts))
+    dp.add_handler(CommandHandler("otts", otts))
+    dp.add_handler(CommandHandler("developer", developer))
 
 
     # on noncommand i.e message - echo the message on Telegram
-    dp.addHandler(MessageHandler([Filters.text], echo))
+    dp.add_handler(MessageHandler([Filters.text], echo))
 
     # log all errors
-    dp.addErrorHandler(error)
+    dp.add_error_handler(error)
 
     updater.start_polling()
 
