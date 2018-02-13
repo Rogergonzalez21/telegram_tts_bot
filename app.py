@@ -29,11 +29,11 @@ def generate_tts(text, lang):
 
 def start(bot, update):
     bot.sendVoice(chat_id=update.message.chat_id, voice=open('hello.ogg', 'rb'))
-    bot.sendMessage(update.message.chat_id, text="Hi! I'm TTSpeechBot. To use: /tts [lang] [menssage], for example: /tts en I'm TTSBot!", parse_mode=telegram.ParseMode.HTML)
+    bot.sendMessage(update.message.chat_id, text="Hi! I'm TTSpeechBot. To use: /tts [lang] [message], for example: /tts en I'm TTSBot!", parse_mode=telegram.ParseMode.HTML)
 
 
 def help(bot, update):
-    bot.sendMessage(update.message.chat_id, text="To use: /tts [lang] [menssage], for example: /tts en I'm TTSBot!", parse_mode=telegram.ParseMode.HTML)
+    bot.sendMessage(update.message.chat_id, text="To use: /tts [lang] [message], for example: /tts en I'm TTSBot!", parse_mode=telegram.ParseMode.HTML)
 
 
 def tts(bot, update):
@@ -58,11 +58,11 @@ def otts(bot,update):
         filename = generate_tts('Fucking' + update.message.text[9:], update.message.text[6:8])
         bot.sendVoice(chat_id=update.message.chat_id, voice=open('audios/%s.ogg'%filename, 'rb'))
     except:
-        bot.sendMessage(update.message.chat_id, text="Please, use the right format: /otts [lang] [menssage], for example: /tts en I'm TTSBot!")
+        bot.sendMessage(update.message.chat_id, text="Please, use the right format: /otts [lang] [message], for example: /tts en I'm TTSBot!")
 
 
 def echo(bot, update):
-    bot.sendMessage(update.message.chat_id, text="Please, use the right format: /tts [lang] [menssage], for example: /tts en I'm TTSBot!")
+    bot.sendMessage(update.message.chat_id, text="Please, use the right format: /tts [lang] [message], for example: /tts en I'm TTSBot!")
 
 
 def developer(bot, update):
